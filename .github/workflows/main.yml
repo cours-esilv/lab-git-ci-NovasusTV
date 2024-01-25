@@ -19,3 +19,14 @@ jobs:
     # Build the project with Maven
     - name: Build with Maven
       run: mvn --batch-mode --update-snapshots package
+
+    # Test the project
+    - name: Test the project
+      run: mvn test
+
+    # Publish the test results
+    - name: Publish Unit Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v1
+      if: always()
+      with:
+        files: target/**/TEST-*.xml
