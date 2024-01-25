@@ -1,0 +1,49 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    # Set up Java 8
+    - name: Set up JDK 8
+      uses: actions/setup-java@v2
+      with:
+        java-version: '8'
+        distribution: 'adopt'
+
+    # Build the project with Maven
+    - name: Build with Maven
+      run: mvn --batch-mode --update-snapshots package
+
+    # Test the project
+    - name: Test the project
+      run: mvn test
+
+    # Publish the test results
+    - name: Publish Unit Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v1
+      if: always()
+      with:
+        files: target/**/TEST-*.xml
+
+    # Publish the built artifact
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2.2.4
+      with:
+        name: my-app-1.0
+        path: target/*
+
+    # Install Docker
+    - name: Install Docker
+      uses: docker/setup-buildx-action@v1
+      with:
+        install: true
+
+    # Build the Docker image
+    - name: Docker build
+      run: docker build .
