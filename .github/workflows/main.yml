@@ -10,7 +10,6 @@ on:
       - main
       - 'feature/*'
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,12 +30,12 @@ jobs:
 
     # Test the project
     - name: Test the project
-      run: mvn test # replace with your actual test command if different
+      run: mvn test
 
     # Publish the test results
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
-      if: always() # This ensures that the test results are published even if the previous step fails
+      if: always()
       with:
         files: target/**/TEST-*.xml
 
